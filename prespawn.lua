@@ -77,7 +77,7 @@ local instance_list = {}
 
 local g_spawn_instance_per_second = 0
 
-function drain_fd(pipe, fdname, ret, instance)
+local function drain_fd(pipe, fdname, ret, instance)
   local r
   local out = ret[fdname]
   while true do
@@ -103,7 +103,7 @@ function drain_fd(pipe, fdname, ret, instance)
   end
 end
 
-local find_instance_id = function (pid)
+local function find_instance_id(pid)
   pid = tonumber(pid)
   local id
   for i, v in ipairs(instance_list) do
@@ -115,12 +115,12 @@ local find_instance_id = function (pid)
   return id
 end
 
-function remove_instance(pid)
+local function remove_instance(pid)
   local id = find_instance_id(pid)
   table.remove(instance_list, id)
 end
 
-function spawn_instance(cmd)
+local function spawn_instance(cmd)
   local ret = {stderr = {}, stdout = {}}
   local instance_pipe, pid = io.popen(cmd, '3s')
 
@@ -145,7 +145,7 @@ local g_min_instance = tonumber(parg:get_last_val('min-instance'))
 local g_cmd = parg.last_arg[0] ..' '.. table.concat(parg.last_arg, ' ')
 local g_spawn_instance = 0
 
-function spawn_min_number_of_instance()
+local function spawn_min_number_of_instance()
   while #instance_list < g_min_instance do
     spawn_instance(g_cmd)
     g_spawn_instance = g_spawn_instance + 1
